@@ -1,10 +1,17 @@
 import Directory from '../../component/Directory/directory';
-import './Homepage.scss';
+
+import styled from 'styled-components';
+const HomepageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 80px;
+`;
 const Homepage = ({ history }) => {
   return (
-    <div className="homepage">
+    <HomepageContainer className="homepage">
       <Directory />
-    </div>
+    </HomepageContainer>
   );
 };
 export default Homepage;
