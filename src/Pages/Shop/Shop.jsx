@@ -1,78 +1,71 @@
-import React from 'react';
-import { createStructuredSelector } from 'reselect';
-
-import { Route } from 'react-router-dom';
-import CollectionOverview from '../../component/Collection-overview/Collection-overview';
-import { connect } from 'react-redux';
-import CollectionPage from '../Collection/Collection';
-import {
-  selectIsCollectionFetching,
-  selectIsCollectionLoaded,
-} from '../../Redux/Shop/Shop.selector';
-import { fetchCollectionsStartAsync } from '../../Redux/Shop/shop.action';
+// import {
+//   selectIsCollectionFetching,
+//   selectIsCollectionLoaded,
+// } from '../../Redux/Shop/Shop.selector';
 // import {
 //   firestore,
 //   convertCollectionsSnapShotToMap,
 // } from '../../Firebase/firebase.util.js';
-import SpinnerComponent from '../../component/Spinner/Spinner';
+// import SpinnerComponent from '../../component/Spinner/Spinner';
 
-const CollectionOverviewWithSpinner = SpinnerComponent(CollectionOverview);
-const CollectionPageWithSpinner = SpinnerComponent(CollectionPage);
+// const CollectionOverviewWithSpinner = SpinnerComponent(CollectionOverview);
+
+// const CollectionPageWithSpinner = SpinnerComponent(CollectionPage);
+// state = {
+//   loading: true,
+// };
+// unsubscribeFromSnapShot = null;
+// const { updateCollections } = this.props;
+// const collectionRef = firestore.collection('collections');
+// // fetch('https://firestore.googleapis.com/v1/projects/react-e-comm/databases/(default)/documents/collections')
+// // .then(res=>res.json())
+// // .then(collections=>console.log(collections))
+// // collectionRef.onSnapshot(async)
+// collectionRef.get().then((snapShot) => {
+//   const collectionMap = convertCollectionsSnapShotToMap(snapShot);
+//   updateCollections(collectionMap);
+//   this.setState({ loading: false });
+// });
+// render={(props) => (
+//   <CollectionPageWithSpinner
+//     isLoading={!isCollectionLoaded}
+//     {...props}
+//   />
+// )}
+// const { loading } = this.state;
+import React from 'react';
+
+import { Route } from 'react-router-dom';
+import CollectionOverviewContainer from '../../component/Collection-overview/Collection-overview.container';
+import { connect } from 'react-redux';
+import { fetchCollectionsStartAsync } from '../../Redux/Shop/shop.action';
+import CollectionPageContainer from '../Collection/Collection.container';
+
 class ShopPage extends React.Component {
-  // state = {
-  //   loading: true,
-  // };
-  // unsubscribeFromSnapShot = null;
-
   componentDidMount() {
     const { fetchCollectionsStartAsync } = this.props;
     fetchCollectionsStartAsync();
-    // const { updateCollections } = this.props;
-    // const collectionRef = firestore.collection('collections');
-    // // fetch('https://firestore.googleapis.com/v1/projects/react-e-comm/databases/(default)/documents/collections')
-    // // .then(res=>res.json())
-    // // .then(collections=>console.log(collections))
-    // // collectionRef.onSnapshot(async)
-    // collectionRef.get().then((snapShot) => {
-    //   const collectionMap = convertCollectionsSnapShotToMap(snapShot);
-    //   updateCollections(collectionMap);
-    //   this.setState({ loading: false });
-    // });
   }
   render() {
-    const { match, isCollectionFetching, isCollectionLoaded } = this.props;
-    // const { loading } = this.state;
+    const { match } = this.props;
+
     return (
       <div className="shop-page">
         <Route
           exact
           path={`${match.path}`}
-          render={(props) => (
-            <CollectionOverviewWithSpinner
-              isLoading={isCollectionFetching}
-              {...props}
-            />
-          )}
+          component={CollectionOverviewContainer}
         />
         <Route
           path={`${match.path}/:collectionId`}
-          render={(props) => (
-            <CollectionPageWithSpinner
-              isLoading={!isCollectionLoaded}
-              {...props}
-            />
-          )}
+          component={CollectionPageContainer}
         />
       </div>
     );
   }
 }
-const mapStateTopProps = createStructuredSelector({
-  isCollectionFetching: selectIsCollectionFetching,
-  isCollectionLoaded: selectIsCollectionLoaded,
-});
 
 const mapDispatchToProps = (dispatch) => ({
   fetchCollectionsStartAsync: () => dispatch(fetchCollectionsStartAsync()),
 });
-export default connect(mapStateTopProps, mapDispatchToProps)(ShopPage);
+export default connect(null, mapDispatchToProps)(ShopPage);
